@@ -1,0 +1,26 @@
+name: Copy Branch Before Merge
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+jobs:
+  copy_branch:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout target branch
+      uses: actions/checkout@v2
+      with:
+        ref: ${{ pull_request.base.ref }}
+
+    - name: Create copy branch
+      run: |
+        git branch copy-${{ pull_request.base.ref }}
+        git checkout copy-${{ pull_request.base.ref }}
+        git push -u origin copy-${{ pull_request.base.ref }}
+
+    - name: Merge pull request
+      run: |
+        git merge ${{ pull_request.head.ref }}
+        git push
