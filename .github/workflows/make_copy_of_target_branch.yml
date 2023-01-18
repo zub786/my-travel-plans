@@ -22,5 +22,6 @@ jobs:
 
     - name: Merge pull request
       run: |
+        git checkout ${{ github.event.pull_request.base.ref }}
         git merge ${{ github.event.pull_request.head.ref }}
         git push
